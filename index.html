@@ -516,14 +516,15 @@
                 backdrop-filter: blur(2px);
                 z-index: 149;
                 opacity: 0;
+                pointer-events: none;
                 transition: opacity .25s;
             }
-            .sidebar-overlay.show { opacity: 1; }
+            .sidebar-overlay.show { opacity: 1; pointer-events: auto; }
 
             @media (max-width: 680px) {
                 body { flex-direction: column; }
                 .hamburger { display: flex; }
-                .sidebar-overlay { display: block; }
+                .sidebar-overlay { display: block; pointer-events: none; }
                 .sidebar {
                     position: fixed !important;
                     left: -100% !important;
