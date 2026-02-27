@@ -1,0 +1,1434 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Haziq Zikri</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --bg: #0d1017;
+                --bg-card: #13181e;
+                --bg-hover: #1a2030;
+                --border: #1e2530;
+                --border-hl: #2a3545;
+                --text: #bfbdb6;
+                --text-dim: #5c6773;
+                --text-head: #e6e1cf;
+                --orange: #ff8f40;
+                --yellow: #e6b450;
+                --green: #7fd962;
+                --blue: #59c2ff;
+                --teal: #95e6cb;
+                --purple: #d2a6ff;
+                --red: #f07178;
+                --radius: 12px;
+                --radius-sm: 7px;
+                --sidebar: 260px;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: "Sora", sans-serif;
+                background: var(--bg);
+                color: var(--text);
+                line-height: 1.7;
+                min-height: 100vh;
+                display: flex;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                background:
+                    radial-gradient(
+                        ellipse 60% 50% at 0% 20%,
+                        rgba(255, 143, 64, 0.05) 0%,
+                        transparent 60%
+                    ),
+                    radial-gradient(
+                        ellipse 40% 40% at 100% 80%,
+                        rgba(89, 194, 255, 0.04) 0%,
+                        transparent 60%
+                    );
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            /* ── SIDEBAR ── */
+            .sidebar {
+                width: var(--sidebar);
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                border-right: 1px solid var(--border);
+                background: var(--bg);
+                display: flex;
+                flex-direction: column;
+                padding: 2rem 1.75rem;
+                z-index: 100;
+                overflow-y: auto;
+                scrollbar-width: none;
+            }
+            .sidebar::-webkit-scrollbar {
+                display: none;
+            }
+
+            .sidebar-identity {
+                display: flex;
+                align-items: center;
+                gap: 0.85rem;
+                margin-bottom: 0.4rem;
+            }
+            .sidebar-pfp {
+                width: 64px;
+                height: 64px;
+                border-radius: 8px;
+                object-fit: cover;
+                border: 1px solid var(--border);
+                flex-shrink: 0;
+            }
+            .sidebar-name h1 {
+                font-size: 1.05rem;
+                font-weight: 700;
+                color: var(--text-head);
+                letter-spacing: -0.01em;
+                line-height: 1.3;
+            }
+            .sidebar-aliases {
+                display: flex;
+                flex-direction: column;
+                gap: 0.15rem;
+                margin-top: 0.35rem;
+            }
+            .alias {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.63rem;
+                color: var(--text-dim);
+                letter-spacing: 0.04em;
+            }
+
+            .sidebar-loc {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.68rem;
+                color: var(--text-dim);
+                margin-top: 0.85rem;
+                padding-top: 0.85rem;
+                border-top: 1px solid var(--border);
+            }
+            .sidebar-loc span {
+                color: var(--teal);
+            }
+
+            /* sidebar nav */
+            .sidebar-nav {
+                margin-top: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.15rem;
+            }
+
+            .nav-item {
+                display: flex;
+                align-items: center;
+                gap: 0.65rem;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.75rem;
+                letter-spacing: 0.06em;
+                color: var(--text-dim);
+                text-decoration: none;
+                padding: 0.5rem 0.75rem;
+                border-radius: var(--radius-sm);
+                transition: all 0.2s;
+                position: relative;
+            }
+            .nav-item::before {
+                content: "";
+                width: 2px;
+                height: 0;
+                background: var(--orange);
+                border-radius: 99px;
+                transition: height 0.2s;
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            .nav-item:hover,
+            .nav-item.active {
+                color: var(--text-head);
+                background: var(--bg-card);
+            }
+            .nav-item.active::before {
+                height: 60%;
+            }
+            .nav-item.active {
+                color: var(--orange);
+            }
+
+            .nav-dot {
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: currentColor;
+                opacity: 0.5;
+                flex-shrink: 0;
+            }
+
+            /* sidebar footer */
+            .sidebar-footer {
+                margin-top: auto;
+                padding-top: 1.5rem;
+                border-top: 1px solid var(--border);
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.62rem;
+                color: var(--text-dim);
+                line-height: 1.8;
+            }
+
+            /* ── MAIN CONTENT ── */
+            .main {
+                margin-left: var(--sidebar);
+                flex: 1;
+                padding: 3rem 3rem 4rem 3.5rem;
+                max-width: 880px;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* ── SECTIONS ── */
+            .section {
+                margin-bottom: 5rem;
+                opacity: 0;
+                transform: translateY(16px);
+                animation: fadeUp 0.5s ease forwards;
+            }
+            .section:nth-child(1) {
+                animation-delay: 0.05s;
+            }
+            .section:nth-child(2) {
+                animation-delay: 0.15s;
+            }
+            .section:nth-child(3) {
+                animation-delay: 0.25s;
+            }
+            .section:nth-child(4) {
+                animation-delay: 0.35s;
+            }
+
+            .section-label {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.68rem;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--text-dim);
+                margin-bottom: 1.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            .section-label::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: var(--border);
+            }
+
+            /* ── HERO ── */
+            .hero-eyebrow {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.72rem;
+                letter-spacing: 0.15em;
+                color: var(--orange);
+                text-transform: uppercase;
+                margin-bottom: 1.5rem;
+            }
+            .hero-eyebrow::before {
+                content: "> ";
+                color: var(--text-dim);
+            }
+
+            .hero-bio {
+                font-size: 0.95rem;
+                color: var(--text);
+                line-height: 1.85;
+                max-width: 580px;
+            }
+            .hl-orange {
+                color: var(--orange);
+                font-weight: 500;
+            }
+            .hl-blue {
+                color: var(--blue);
+                font-weight: 500;
+            }
+            .hl-yellow {
+                color: var(--yellow);
+                font-weight: 500;
+            }
+
+            /* ── PROJECTS ── */
+            .projects-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.75rem;
+            }
+
+            .project-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 1.25rem 1.4rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.45rem;
+                transition: all 0.2s;
+                text-decoration: none;
+                color: inherit;
+                position: relative;
+                overflow: hidden;
+            }
+            .project-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: var(--accent-color, var(--orange));
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+            .project-card:hover {
+                border-color: var(--border-hl);
+                background: var(--bg-hover);
+                transform: translateY(-2px);
+            }
+            .project-card:hover::before {
+                opacity: 1;
+            }
+
+            .project-div {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.6rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--text-dim);
+            }
+            .project-name {
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--text-head);
+            }
+            .project-desc {
+                font-size: 0.8rem;
+                color: var(--text-dim);
+                line-height: 1.6;
+            }
+            .project-tags {
+                display: flex;
+                gap: 0.35rem;
+                flex-wrap: wrap;
+                margin-top: 0.2rem;
+            }
+            .ptag {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.62rem;
+                padding: 0.12rem 0.5rem;
+                border-radius: 99px;
+                border: 1px solid var(--border);
+                color: var(--text-dim);
+            }
+
+            /* ── SKILLS ── */
+            .skills-wrap {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .skill-group {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 1.1rem 1.35rem;
+            }
+            .skill-group-label {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.12em;
+                margin-bottom: 0.75rem;
+            }
+            .skill-pills {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.4rem;
+            }
+            .skill-pill {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.75rem;
+                padding: 0.25rem 0.75rem;
+                border-radius: 10px;
+                border: 1px solid var(--border);
+                background: var(--bg);
+                color: var(--text);
+                transition: all 0.15s;
+            }
+            .skill-pill:hover {
+                border-color: var(--border-hl);
+                color: var(--text-head);
+                transform: translateY(-1px);
+            }
+            .skill-pill.lang {
+                border-color: rgba(89, 194, 255, 0.3);
+                color: var(--blue);
+                background: rgba(89, 194, 255, 0.05);
+            }
+            .skill-pill.tool {
+                border-color: rgba(127, 217, 98, 0.3);
+                color: var(--green);
+                background: rgba(127, 217, 98, 0.05);
+            }
+            .skill-pill.music {
+                border-color: rgba(255, 143, 64, 0.3);
+                color: var(--orange);
+                background: rgba(255, 143, 64, 0.05);
+            }
+
+            /* ── CONTACT ── */
+            .contact-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.65rem;
+            }
+
+            .contact-link {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 0.9rem 1.1rem;
+                text-decoration: none;
+                color: var(--text);
+                transition: all 0.2s;
+            }
+            .contact-link:hover {
+                border-color: var(--border-hl);
+                background: var(--bg-hover);
+                transform: translateY(-2px);
+                color: var(--text-head);
+            }
+            .contact-icon {
+                width: 34px;
+                height: 34px;
+                border-radius: var(--radius-sm);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+            .contact-info {
+                display: flex;
+                flex-direction: column;
+            }
+            .contact-name {
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: var(--text-head);
+            }
+            .contact-handle {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.67rem;
+                color: var(--text-dim);
+            }
+
+            /* ── ANIMATIONS ── */
+            @keyframes fadeUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* ── RESPONSIVE ── */
+            @media (max-width: 900px) {
+                :root {
+                    --sidebar: 220px;
+                }
+                .main {
+                    padding: 2rem 1.75rem 3rem 2rem;
+                }
+            }
+            @media (max-width: 680px) {
+                body {
+                    flex-direction: column;
+                }
+                .sidebar {
+                    position: relative;
+                    width: 100%;
+                    min-height: auto;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    gap: 1rem;
+                    padding: 1.25rem 1.25rem;
+                    border-right: none;
+                    border-bottom: 1px solid var(--border);
+                }
+                .sidebar-nav {
+                    flex-direction: row;
+                    margin-top: 0;
+                    gap: 0.25rem;
+                }
+                .nav-item::before {
+                    display: none;
+                }
+                .sidebar-footer {
+                    display: none;
+                }
+                .sidebar-loc {
+                    margin-top: 0;
+                    padding-top: 0;
+                    border-top: none;
+                }
+                .main {
+                    margin-left: 0;
+                    padding: 1.5rem 1.25rem 3rem;
+                }
+                .projects-grid,
+                .contact-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* ── CLOCK WIDGET ── */
+            .sidebar-clock {
+                margin-top: 0.65rem;
+                padding: 0.7rem;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-sm);
+                font-family: "JetBrains Mono", monospace;
+            }
+            .clock-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                gap: 0.5rem;
+            }
+            .clock-label {
+                font-size: 0.6rem;
+                letter-spacing: 0.1em;
+                color: var(--text-dim);
+                text-transform: uppercase;
+            }
+            .clock-time {
+                font-size: 0.8rem;
+                color: var(--text-head);
+                font-weight: 500;
+                letter-spacing: 0.03em;
+            }
+            .clock-divider {
+                height: 1px;
+                background: var(--border);
+                margin: 0.5rem 0;
+            }
+            .clock-sync {
+                text-align: center;
+                font-size: 0.65rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                margin-top: 0.4rem;
+                padding-top: 0.4rem;
+                border-top: 1px solid var(--border);
+            }
+            .clock-sync.synced {
+                color: var(--green);
+            }
+            .clock-sync.offset {
+                color: var(--text-dim);
+            }
+            /* ── TOAST ── */
+            .toast {
+                position: fixed;
+                top: -80px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--bg-card);
+                border: 1px solid var(--border-hl);
+                border-radius: var(--radius);
+                padding: 0.75rem 1.25rem;
+                display: flex;
+                align-items: center;
+                gap: 0.65rem;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 0.78rem;
+                color: var(--text-head);
+                z-index: 9999;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+                transition: top 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+                white-space: nowrap;
+            }
+            .toast.show {
+                top: 1.25rem;
+            }
+            .toast-icon {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: rgba(127, 217, 98, 0.15);
+                color: var(--green);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.85rem;
+                flex-shrink: 0;
+            }
+            .toast-dim {
+                color: var(--text-dim);
+                margin-left: 0.25rem;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- TOAST -->
+        <div class="toast" id="toast">
+            <div class="toast-icon">✓</div>
+            <span>Copied <span class="toast-dim">syedsaiful</span></span>
+        </div>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-identity">
+                <img src="sakuyaa.jpg" alt="Haziq Zikri" class="sidebar-pfp" />
+                <div class="sidebar-name">
+                    <h1>Haziq Zikri</h1>
+                    <div class="sidebar-aliases">
+                        <span class="alias">Haziqrm47</span>
+                        <span class="alias">Izumi Sonoka</span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="sidebar-loc">📍 <span>Selangor, MY</span> · GMT+8</p>
+
+            <div class="sidebar-clock">
+                <div class="clock-row">
+                    <span class="clock-label">my time</span>
+                    <span class="clock-time" id="clock-mine">--:--:--</span>
+                </div>
+                <div class="clock-divider"></div>
+                <div class="clock-row">
+                    <span class="clock-label">your time</span>
+                    <span class="clock-time" id="clock-user">--:--:--</span>
+                </div>
+                <div class="clock-sync" id="clock-sync">...</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#about" class="nav-item active"
+                    ><span class="nav-dot"></span>about</a
+                >
+                <a href="#projects" class="nav-item"
+                    ><span class="nav-dot"></span>projects</a
+                >
+                <a href="#hardware" class="nav-item"
+                    ><span class="nav-dot"></span>hardware</a
+                >
+                <a href="#skills" class="nav-item"
+                    ><span class="nav-dot"></span>skills</a
+                >
+                <a href="#contact" class="nav-item"
+                    ><span class="nav-dot"></span>contact</a
+                >
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>built by hand</p>
+                <p>no frameworks</p>
+                <p>no trackers</p>
+                <p style="margin-top: 0.5rem; color: #3a4550">
+                    Haz Archive. 2026
+                </p>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+            <!-- ABOUT -->
+            <section class="section" id="about">
+                <p class="section-label">about</p>
+                <p class="hero-eyebrow">hello, world</p>
+                <p class="hero-bio">
+                    Independent
+                    <span class="hl-orange">music producer</span> from
+                    <span class="hl-yellow">Selangor, Malaysia</span>
+                    specializing in high-octane hardcore and
+                    <span class="hl-blue">rhythm-game-inspired</span> electronic
+                    music. Launched his creative journey on January 1st, 2024
+                    and has been aggressively exploring Hardstyle, Drum and
+                    Bass, and other fast-paced high-impact subgenres ever since.
+                    Also a developer who compiles things from source for fun.
+                </p>
+            </section>
+
+            <!-- PROJECTS -->
+            <section class="section" id="projects">
+                <p class="section-label">projects</p>
+                <div class="projects-grid">
+                    <a
+                        href="https://github.com/Astaraxia-Linux"
+                        class="project-card"
+                        style="--accent-color: var(--blue)"
+                    >
+                        <span class="project-div"
+                            >NPG3N / Source-Based Systems</span
+                        >
+                        <span class="project-name">Astaraxia Linux</span>
+                        <span class="project-desc"
+                            >A minimal, source-based Linux distribution. Powered
+                            by the Astral package manager.</span
+                        >
+                        <div class="project-tags">
+                            <span class="ptag">C++</span
+                            ><span class="ptag">POSIX sh</span
+                            ><span class="ptag">Linux</span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="https://github.com/Astaraxia-Linux/Astral"
+                        class="project-card"
+                        style="--accent-color: var(--teal)"
+                    >
+                        <span class="project-div"
+                            >NPG3N / Source-Based Systems</span
+                        >
+                        <span class="project-name">Astral</span>
+                        <span class="project-desc"
+                            >Minimal POSIX package manager. Builds everything
+                            from source. Four recipe formats. One Maniac™.</span
+                        >
+                        <div class="project-tags">
+                            <span class="ptag">POSIX sh</span
+                            ><span class="ptag">v3 .stars</span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="https://github.com/Point-project/PointBlank/"
+                        class="project-card"
+                        style="--accent-color: var(--purple)"
+                    >
+                        <span class="project-div">NPG3N / UI/UX Studios</span>
+                        <span class="project-name">Point:Blank WM</span>
+                        <span class="project-desc"
+                            >X11 tiling window manager. 401 KB PSS. 8 layouts.
+                            Custom DSL. No excuses.</span
+                        >
+                        <div class="project-tags">
+                            <span class="ptag">C++20</span
+                            ><span class="ptag">RAII</span
+                            ><span class="ptag">X11</span
+                            ><span class="ptag">19k LOC</span>
+                        </div>
+                    </a>
+                    <a
+                        href="#"
+                        class="project-card"
+                        style="--accent-color: var(--yellow)"
+                    >
+                        <span class="project-div">Holding Company</span>
+                        <span class="project-name">HAZ ARCHIVE</span>
+                        <span class="project-desc"
+                            >The parent. A holding company and creative
+                            collective. Limits are not real.</span
+                        >
+                        <div class="project-tags">
+                            <span class="ptag">All of the above</span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- HARDWARE -->
+            <section class="section" id="hardware">
+                <p class="section-label">hardware</p>
+                <div class="skills-wrap">
+                    <!-- machine card -->
+                    <div class="skill-group">
+                        <p class="skill-group-label" style="color: var(--teal)">
+                            // daily driver
+                        </p>
+                        <div
+                            style="
+                                display: grid;
+                                grid-template-columns: 1fr 1fr;
+                                gap: 0.5rem;
+                                margin-top: 0.25rem;
+                            "
+                        >
+                            <div
+                                style="
+                                    background: var(--bg);
+                                    border: 1px solid var(--border);
+                                    border-radius: var(--radius-sm);
+                                    padding: 0.85rem 1rem;
+                                "
+                            >
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.6rem;
+                                        letter-spacing: 0.1em;
+                                        color: var(--text-dim);
+                                        margin-bottom: 0.3rem;
+                                    "
+                                >
+                                    MACHINE
+                                </p>
+                                <p
+                                    style="
+                                        font-size: 0.88rem;
+                                        color: var(--text-head);
+                                        font-weight: 600;
+                                    "
+                                >
+                                    Lenovo 500e Gen 2
+                                </p>
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.7rem;
+                                        color: var(--text-dim);
+                                        margin-top: 0.15rem;
+                                    "
+                                >
+                                    Chromebook · 2019
+                                </p>
+                            </div>
+
+                            <div
+                                style="
+                                    background: var(--bg);
+                                    border: 1px solid var(--border);
+                                    border-radius: var(--radius-sm);
+                                    padding: 0.85rem 1rem;
+                                "
+                            >
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.6rem;
+                                        letter-spacing: 0.1em;
+                                        color: var(--text-dim);
+                                        margin-bottom: 0.3rem;
+                                    "
+                                >
+                                    OS
+                                </p>
+                                <p
+                                    style="
+                                        font-size: 0.88rem;
+                                        color: var(--text-head);
+                                        font-weight: 600;
+                                    "
+                                >
+                                    Arch Linux
+                                </p>
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.7rem;
+                                        color: var(--text-dim);
+                                        margin-top: 0.15rem;
+                                    "
+                                >
+                                    Astaraxia Linux (WIP)
+                                </p>
+                            </div>
+
+                            <div
+                                style="
+                                    background: var(--bg);
+                                    border: 1px solid var(--border);
+                                    border-radius: var(--radius-sm);
+                                    padding: 0.85rem 1rem;
+                                "
+                            >
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.6rem;
+                                        letter-spacing: 0.1em;
+                                        color: var(--text-dim);
+                                        margin-bottom: 0.3rem;
+                                    "
+                                >
+                                    CPU
+                                </p>
+                                <p
+                                    style="
+                                        font-size: 0.88rem;
+                                        color: var(--text-head);
+                                        font-weight: 600;
+                                    "
+                                >
+                                    Intel Celeron N4100
+                                </p>
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.7rem;
+                                        color: var(--text-dim);
+                                        margin-top: 0.15rem;
+                                    "
+                                >
+                                    4C · 1.1 GHz (2.4 boost) · Gemini Lake
+                                </p>
+                            </div>
+
+                            <div
+                                style="
+                                    background: var(--bg);
+                                    border: 1px solid var(--border);
+                                    border-radius: var(--radius-sm);
+                                    padding: 0.85rem 1rem;
+                                "
+                            >
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.6rem;
+                                        letter-spacing: 0.1em;
+                                        color: var(--text-dim);
+                                        margin-bottom: 0.3rem;
+                                    "
+                                >
+                                    RAM
+                                </p>
+                                <p
+                                    style="
+                                        font-size: 0.88rem;
+                                        color: var(--text-head);
+                                        font-weight: 600;
+                                    "
+                                >
+                                    4 GB LPDDR4
+                                </p>
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.7rem;
+                                        color: var(--text-dim);
+                                        margin-top: 0.15rem;
+                                    "
+                                >
+                                    + 5 GB zram · effectively 9 GB
+                                </p>
+                            </div>
+
+                            <div
+                                style="
+                                    background: var(--bg);
+                                    border: 1px solid var(--border);
+                                    border-radius: var(--radius-sm);
+                                    padding: 0.85rem 1rem;
+                                "
+                            >
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.6rem;
+                                        letter-spacing: 0.1em;
+                                        color: var(--text-dim);
+                                        margin-bottom: 0.3rem;
+                                    "
+                                >
+                                    STORAGE
+                                </p>
+                                <p
+                                    style="
+                                        font-size: 0.88rem;
+                                        color: var(--text-head);
+                                        font-weight: 600;
+                                    "
+                                >
+                                    32 GB eMMC
+                                </p>
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.7rem;
+                                        color: var(--text-dim);
+                                        margin-top: 0.15rem;
+                                    "
+                                >
+                                    Internal · no SSD slot
+                                </p>
+                            </div>
+
+                            <div
+                                style="
+                                    background: var(--bg);
+                                    border: 1px solid var(--border);
+                                    border-radius: var(--radius-sm);
+                                    padding: 0.85rem 1rem;
+                                "
+                            >
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.6rem;
+                                        letter-spacing: 0.1em;
+                                        color: var(--text-dim);
+                                        margin-bottom: 0.3rem;
+                                    "
+                                >
+                                    WM / COMPOSITOR
+                                </p>
+                                <p
+                                    style="
+                                        font-size: 0.88rem;
+                                        color: var(--text-head);
+                                        font-weight: 600;
+                                    "
+                                >
+                                    Hyprland
+                                </p>
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.7rem;
+                                        color: var(--text-dim);
+                                        margin-top: 0.15rem;
+                                    "
+                                >
+                                    Wayland · daily driver
+                                </p>
+                                <p
+                                    style="
+                                        font-family:
+                                            &quot;JetBrains Mono&quot;,
+                                            monospace;
+                                        font-size: 0.7rem;
+                                        color: var(--text-dim);
+                                        margin-top: 0.1rem;
+                                    "
+                                >
+                                    + Point:Blank when tired of Hyprland
+                                </p>
+                            </div>
+                        </div>
+
+                        <p
+                            style="
+                                font-family:
+                                    &quot;JetBrains Mono&quot;, monospace;
+                                font-size: 0.68rem;
+                                color: var(--text-dim);
+                                margin-top: 1rem;
+                                padding-top: 0.85rem;
+                                border-top: 1px solid var(--border);
+                            "
+                        >
+                            // a machine that has no business running a custom
+                            WM. runs anyway.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SKILLS -->
+            <section class="section" id="skills">
+                <p class="section-label">skills & stack</p>
+                <div class="skills-wrap">
+                    <div class="skill-group">
+                        <p class="skill-group-label" style="color: var(--blue)">
+                            // development
+                        </p>
+                        <div class="skill-pills">
+                            <span class="skill-pill lang">C++</span>
+                            <span class="skill-pill lang">C</span>
+                            <span class="skill-pill lang">Python</span>
+                            <span class="skill-pill lang">QML</span>
+                            <span class="skill-pill lang">POSIX sh</span>
+                            <span class="skill-pill lang">HTML</span>
+                            <span class="skill-pill lang">JSON</span>
+                            <span class="skill-pill lang">Nix</span>
+                            <span class="skill-pill lang">Haskell</span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <p
+                            class="skill-group-label"
+                            style="color: var(--green)"
+                        >
+                            // tools & qol
+                        </p>
+                        <div class="skill-pills">
+                            <span class="skill-pill tool">Krita</span>
+                            <span class="skill-pill tool">REAPER</span>
+                            <span class="skill-pill tool">Arch Linux</span>
+                            <span class="skill-pill tool">CMake</span>
+                            <span class="skill-pill tool">Git</span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <p
+                            class="skill-group-label"
+                            style="color: var(--orange)"
+                        >
+                            // music production
+                        </p>
+                        <div class="skill-pills">
+                            <span class="skill-pill music">Hardstyle</span>
+                            <span class="skill-pill music">Drum & Bass</span>
+                            <span class="skill-pill music">Hardcore</span>
+                            <span class="skill-pill music"
+                                >Rhythm Game OST</span
+                            >
+                            <span class="skill-pill music">Speedcore</span>
+                            <span class="skill-pill music">Haziqcore</span>
+                            <span class="skill-pill music"
+                                >HTTkKORE (HARDTECHTEkKORE)</span
+                            >
+                            <span class="skill-pill music">Sound Design</span>
+                            <span class="skill-pill music">Electronic</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTACT -->
+            <section class="section" id="contact">
+                <p class="section-label">contact & links</p>
+                <div class="contact-grid">
+                    <a
+                        href="https://github.com/Izumi-Sonoka"
+                        target="_blank"
+                        class="contact-link"
+                    >
+                        <div
+                            class="contact-icon"
+                            style="
+                                background: rgba(89, 194, 255, 0.1);
+                                color: var(--blue);
+                            "
+                        >
+                            <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path
+                                    d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+                                />
+                            </svg>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">GitHub</span
+                            ><span class="contact-handle">Izumi-Sonoka</span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="https://www.youtube.com/@Haziqrm47"
+                        target="_blank"
+                        class="contact-link"
+                    >
+                        <div
+                            class="contact-icon"
+                            style="
+                                background: rgba(240, 113, 120, 0.1);
+                                color: var(--red);
+                            "
+                        >
+                            <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path
+                                    d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                                />
+                            </svg>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">YouTube</span
+                            ><span class="contact-handle">@Haziqrm47</span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="https://x.com/Haziqrm47"
+                        target="_blank"
+                        class="contact-link"
+                    >
+                        <div
+                            class="contact-icon"
+                            style="
+                                background: rgba(191, 189, 182, 0.08);
+                                color: var(--text);
+                            "
+                        >
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path
+                                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.912-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                                />
+                            </svg>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">X (Twitter)</span
+                            ><span class="contact-handle">@Haziqrm47</span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="https://osu.ppy.sh/users/34745863"
+                        target="_blank"
+                        class="contact-link"
+                    >
+                        <div
+                            class="contact-icon"
+                            style="
+                                background: rgba(210, 166, 255, 0.1);
+                                color: var(--purple);
+                            "
+                        >
+                            <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                />
+                                <circle cx="12" cy="12" r="4" />
+                            </svg>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">osu!</span
+                            ><span class="contact-handle">34745863</span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="https://codeberg.org/Izumi"
+                        target="_blank"
+                        class="contact-link"
+                    >
+                        <div
+                            class="contact-icon"
+                            style="
+                                background: rgba(230, 180, 80, 0.1);
+                                color: var(--yellow);
+                            "
+                        >
+                            <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path
+                                    d="M11.955.49A12 12 0 000 12.49a12 12 0 0012 12 12 12 0 0012-12 12 12 0 00-12.045-12zM12 2.49a10 10 0 0110 10 10 10 0 01-10 10A10 10 0 012 12.49a10 10 0 0110-10zm.5 4.5l-5.5 9.5h11L12.5 7z"
+                                />
+                            </svg>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">Codeberg</span
+                            ><span class="contact-handle">Izumi</span>
+                        </div>
+                    </a>
+
+                    <div
+                        class="contact-link"
+                        style="cursor: pointer"
+                        onclick="showToast()"
+                    >
+                        <div
+                            class="contact-icon"
+                            style="
+                                background: rgba(89, 194, 255, 0.1);
+                                color: var(--blue);
+                            "
+                        >
+                            <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path
+                                    d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"
+                                />
+                            </svg>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">Discord</span
+                            ><span class="contact-handle">syedsaiful</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script>
+            // Highlight active nav item on scroll
+            const sections = document.querySelectorAll("section[id]");
+            const navItems = document.querySelectorAll(".nav-item");
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            navItems.forEach((n) =>
+                                n.classList.remove("active"),
+                            );
+                            const active = document.querySelector(
+                                `.nav-item[href="#${entry.target.id}"]`,
+                            );
+                            if (active) active.classList.add("active");
+                        }
+                    });
+                },
+                { threshold: 0.4 },
+            );
+            sections.forEach((s) => observer.observe(s));
+
+            // Clock
+            function pad(n) {
+                return String(n).padStart(2, "0");
+            }
+            function formatTime(date) {
+                return (
+                    pad(date.getHours()) +
+                    ":" +
+                    pad(date.getMinutes()) +
+                    ":" +
+                    pad(date.getSeconds())
+                );
+            }
+            function updateClock() {
+                const now = new Date();
+
+                // My time — GMT+8
+                const myOffset = 8 * 60;
+                const myTime = new Date(
+                    now.getTime() +
+                        (myOffset - -now.getTimezoneOffset()) * 60000,
+                );
+                document.getElementById("clock-mine").textContent =
+                    formatTime(myTime);
+
+                // User time — local
+                document.getElementById("clock-user").textContent =
+                    formatTime(now);
+
+                // Sync status
+                const userOffsetHours = -now.getTimezoneOffset() / 60;
+                const syncEl = document.getElementById("clock-sync");
+                if (userOffsetHours === 8) {
+                    syncEl.textContent = "⬡ SYNCED";
+                    syncEl.className = "clock-sync synced";
+                } else {
+                    const diff = userOffsetHours - 8;
+                    const sign = diff > 0 ? "+" : "";
+                    syncEl.textContent = "you are " + sign + diff + "h from me";
+                    syncEl.className = "clock-sync offset";
+                }
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            // Toast notification
+            let toastTimer = null;
+            function showToast() {
+                // clipboard: try modern API first, fallback for local files
+                try {
+                    navigator.clipboard
+                        .writeText("syedsaiful")
+                        .catch(() => fallbackCopy());
+                } catch (e) {
+                    fallbackCopy();
+                }
+                triggerToast();
+            }
+            function fallbackCopy() {
+                const el = document.createElement("textarea");
+                el.value = "syedsaiful";
+                el.style.cssText =
+                    "position:fixed;top:-999px;left:-999px;opacity:0;";
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand("copy");
+                document.body.removeChild(el);
+            }
+            function triggerToast() {
+                const toast = document.getElementById("toast");
+                toast.classList.remove("show");
+                void toast.offsetHeight; // force reflow so animation replays
+                toast.classList.add("show");
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(
+                    () => toast.classList.remove("show"),
+                    2500,
+                );
+            }
+        </script>
+    </body>
+</html>
