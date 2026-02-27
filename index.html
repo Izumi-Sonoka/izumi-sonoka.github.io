@@ -525,11 +525,11 @@
                 .hamburger { display: flex; }
                 .sidebar-overlay { display: block; }
                 .sidebar {
-                    position: fixed;
-                    left: -100%;
-                    width: 280px;
-                    height: 100vh;
-                    z-index: 150;
+                    position: fixed !important;
+                    left: -100% !important;
+                    width: 280px !important;
+                    height: 100vh !important;
+                    z-index: 150 !important;
                     border-right: 1px solid var(--border-hl);
                     transition: left .3s cubic-bezier(.4,0,.2,1);
                     overflow-y: auto;
@@ -537,7 +537,7 @@
                     padding: 2rem 1.75rem;
                 }
                 .sidebar::-webkit-scrollbar { display: none; }
-                .sidebar.open { left: 0; }
+                .sidebar.open { left: 0 !important; }
                 .main {
                     margin-left: 0;
                     padding: 4.5rem 1.25rem 3rem;
@@ -641,10 +641,10 @@
     <body>
 
         <!-- HAMBURGER -->
-        <button class="hamburger" id="hamburger" aria-label="Toggle menu" onclick="toggleMenu()">
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
             <span></span><span></span><span></span>
         </button>
-        <div class="sidebar-overlay" id="overlay" onclick="closeMenu()"></div>
+        <div class="sidebar-overlay" id="overlay"></div>
 
         <!-- TOAST -->
         <div class="toast" id="toast">
@@ -1470,21 +1470,34 @@
             }
 
             // Hamburger menu
+            const _sidebar  = document.querySelector('.sidebar');
+            const _overlay  = document.getElementById('overlay');
+            const _hamburger = document.getElementById('hamburger');
+
             function toggleMenu() {
-                const sidebar = document.querySelector('.sidebar');
-                const overlay = document.getElementById('overlay');
-                const btn = document.getElementById('hamburger');
-                const isOpen = sidebar.classList.toggle('open');
-                overlay.classList.toggle('show', isOpen);
-                btn.classList.toggle('open', isOpen);
+                const isOpen = _sidebar.classList.toggle('open');
+                _overlay.classList.toggle('show', isOpen);
+                _hamburger.classList.toggle('open', isOpen);
                 document.body.style.overflow = isOpen ? 'hidden' : '';
             }
             function closeMenu() {
-                document.querySelector('.sidebar').classList.remove('open');
-                document.getElementById('overlay').classList.remove('show');
-                document.getElementById('hamburger').classList.remove('open');
+                _sidebar.classList.remove('open');
+                _overlay.classList.remove('show');
+                _hamburger.classList.remove('open');
                 document.body.style.overflow = '';
             }
+
+            _hamburger.addEventListener('click', toggleMenu);
+            _hamburger.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                toggleMenu();
+            });
+            _overlay.addEventListener('click', closeMenu);
+            _overlay.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                closeMenu();
+            });
+
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', () => {
                     if (window.innerWidth <= 680) closeMenu();
