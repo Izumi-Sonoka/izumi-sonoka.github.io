@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Haziq Zikri</title>
+        <link rel="icon" type="image/x-icon" href="pointproject.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
             href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap"
@@ -492,39 +493,58 @@
                 justify-content: center;
                 gap: 5px;
                 cursor: pointer;
-                transition: border-color .2s;
+                transition: border-color 0.2s;
             }
-            .hamburger:hover { border-color: var(--border-hl); }
+            .hamburger:hover {
+                border-color: var(--border-hl);
+            }
             .hamburger span {
                 display: block;
                 width: 18px;
                 height: 1.5px;
                 background: var(--text);
                 border-radius: 99px;
-                transition: all .25s ease;
+                transition: all 0.25s ease;
                 transform-origin: center;
             }
-            .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-            .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-            .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+            .hamburger.open span:nth-child(1) {
+                transform: translateY(6.5px) rotate(45deg);
+            }
+            .hamburger.open span:nth-child(2) {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+            .hamburger.open span:nth-child(3) {
+                transform: translateY(-6.5px) rotate(-45deg);
+            }
 
             .sidebar-overlay {
                 display: none;
                 position: fixed;
                 inset: 0;
-                background: rgba(0,0,0,.6);
+                background: rgba(0, 0, 0, 0.6);
                 backdrop-filter: blur(2px);
                 z-index: 149;
                 opacity: 0;
                 pointer-events: none;
-                transition: opacity .25s;
+                transition: opacity 0.25s;
             }
-            .sidebar-overlay.show { opacity: 1; pointer-events: auto; }
+            .sidebar-overlay.show {
+                opacity: 1;
+                pointer-events: auto;
+            }
 
             @media (max-width: 680px) {
-                body { flex-direction: column; }
-                .hamburger { display: flex; }
-                .sidebar-overlay { display: block; pointer-events: none; }
+                body {
+                    flex-direction: column;
+                }
+                .hamburger {
+                    display: flex;
+                }
+                .sidebar-overlay {
+                    display: block;
+                    pointer-events: none;
+                }
                 .sidebar {
                     position: fixed !important;
                     left: -100% !important;
@@ -532,13 +552,17 @@
                     height: 100vh !important;
                     z-index: 150 !important;
                     border-right: 1px solid var(--border-hl);
-                    transition: left .3s cubic-bezier(.4,0,.2,1);
+                    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                     overflow-y: auto;
                     scrollbar-width: none;
                     padding: 2rem 1.75rem;
                 }
-                .sidebar::-webkit-scrollbar { display: none; }
-                .sidebar.open { left: 0 !important; }
+                .sidebar::-webkit-scrollbar {
+                    display: none;
+                }
+                .sidebar.open {
+                    left: 0 !important;
+                }
                 .main {
                     margin-left: 0;
                     padding: 4.5rem 1.25rem 3rem;
@@ -640,7 +664,6 @@
         </style>
     </head>
     <body>
-
         <!-- HAMBURGER -->
         <button class="hamburger" id="hamburger" aria-label="Toggle menu">
             <span></span><span></span><span></span>
@@ -1471,36 +1494,36 @@
             }
 
             // Hamburger menu
-            const _sidebar  = document.querySelector('.sidebar');
-            const _overlay  = document.getElementById('overlay');
-            const _hamburger = document.getElementById('hamburger');
+            const _sidebar = document.querySelector(".sidebar");
+            const _overlay = document.getElementById("overlay");
+            const _hamburger = document.getElementById("hamburger");
 
             function toggleMenu() {
-                const isOpen = _sidebar.classList.toggle('open');
-                _overlay.classList.toggle('show', isOpen);
-                _hamburger.classList.toggle('open', isOpen);
-                document.body.style.overflow = isOpen ? 'hidden' : '';
+                const isOpen = _sidebar.classList.toggle("open");
+                _overlay.classList.toggle("show", isOpen);
+                _hamburger.classList.toggle("open", isOpen);
+                document.body.style.overflow = isOpen ? "hidden" : "";
             }
             function closeMenu() {
-                _sidebar.classList.remove('open');
-                _overlay.classList.remove('show');
-                _hamburger.classList.remove('open');
-                document.body.style.overflow = '';
+                _sidebar.classList.remove("open");
+                _overlay.classList.remove("show");
+                _hamburger.classList.remove("open");
+                document.body.style.overflow = "";
             }
 
-            _hamburger.addEventListener('click', toggleMenu);
-            _hamburger.addEventListener('touchend', function(e) {
+            _hamburger.addEventListener("click", toggleMenu);
+            _hamburger.addEventListener("touchend", function (e) {
                 e.preventDefault();
                 toggleMenu();
             });
-            _overlay.addEventListener('click', closeMenu);
-            _overlay.addEventListener('touchend', function(e) {
+            _overlay.addEventListener("click", closeMenu);
+            _overlay.addEventListener("touchend", function (e) {
                 e.preventDefault();
                 closeMenu();
             });
 
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', () => {
+            document.querySelectorAll(".nav-item").forEach((item) => {
+                item.addEventListener("click", () => {
                     if (window.innerWidth <= 680) closeMenu();
                 });
             });
